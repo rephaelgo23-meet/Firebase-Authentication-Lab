@@ -13,11 +13,12 @@ config = {
   "messagingSenderId": "526693248607",
   "appId": "1:526693248607:web:02fdd017f033f346db35ea",
   "measurementId": "G-7WRLLRF9ME",
-  "databaseURL": ""
+  "databaseURL": "https://rephael-s-project-default-rtdb.firebaseio.com/"
 }
 
 firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
+db = firebase.database()
 
 @app.route('/', methods=['GET', 'POST'])
 def signin():
@@ -30,17 +31,31 @@ def signin():
 	except:
 		return render_template("signin.html")
     
-    
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
+
 	if request.method == 'POST':
 		email = request.form["email"]
 		password = request.form["password"]
-	try:
-		login_session['user'] = auth.create_user_with_email_and_password(email, password)
-		return redirect(url_for("add_tweet"))
-	except:
+		full_name = request.form["full_name"]
+		username = request.form["username"]
+		bio = request.form["bio"]
+		user = {
+			"full_name": full_name,
+			"user": username,
+			"bio": bio
+		}
+		try:
+			login_session['user'] = auth.create_user_with_email_and_password(email, password)
+			db.child("users").child(login_session['user']['localId']).set(user)
+			return redirect(url_for("add_tweet"))
+		except:
+			print("im getting an error")
+			return render_template("signup.html")
+	else:
 		return render_template("signup.html")
+
 
 
 @app.route('/add_tweet', methods=['GET', 'POST'])
