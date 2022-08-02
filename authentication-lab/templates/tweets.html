@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	{% for tweet in tweets %}
+	<h1>{{ tweets[tweet]['title'] }}</h1>
+	<p>{{ tweets[tweet]['text'] }}</p>
+	{% endfor %}
+</body>
+</html>
