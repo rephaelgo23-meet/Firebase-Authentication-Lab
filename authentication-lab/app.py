@@ -51,7 +51,7 @@ def signup():
 			db.child("users").child(login_session['user']['localId']).set(user)
 			return redirect(url_for("add_tweet"))
 		except:
-			print("im getting an error")
+			print("i'm getting an error")
 			return render_template("signup.html")
 	else:
 		return render_template("signup.html")
